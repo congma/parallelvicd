@@ -9,7 +9,7 @@ class MasterSlavePair(object):
     """MPI master-slave pair.
 
     The class MasterSlavePair implements a simple workflow using master-slave
-    paralle processes.  It works for the following scenario:
+    parallel processes.  It works for the following scenario:
         * One has a function to be applied to a one-dimension data array
           (presumably large enough to justify parallelization).  This makes the
           problem embarrassingly parallelizable: each slave just need to apply
@@ -192,7 +192,7 @@ class MasterSlavePair(object):
         rankpredicate is a callable that takes a rank and returns a boolean
         value.  The truth of its return value is used to determine whether
         function (if True) or otherwise (if False) should be called.
-        By default, if rankpredict is None, the rank-logic is "to confine
+        By default, if rankpredicate is None, the rank-logic is "to confine
         to the 'master' rank".
 
         If otherwise is a callable, it is called instead of the wrapped
