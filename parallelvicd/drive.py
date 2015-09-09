@@ -109,13 +109,27 @@ class MasterSlavePair(object):
             rsize = self.slice_table[0][1] - self.slice_table[0][0]
             self.masterrecvbuf = numpy.empty(rsize)
 
-    def master(self, ins):
+    def master(self, ins, interlude_callback=None, *i_args, **i_kwargs):
         """Run master (instructor) with input instruction array ins.
 
         This method returns None and alter the state of master as side effect.
         Normally not needed by the user.  See eval() instead.
+
+        Optionally, this method also takes an "interlude" callable, along with
+        its arguments.  During the intermission between the end of
+        starting-slaves and collecting first results from slave, rather than
+        doing nothing, the master can use this lapse of time to call the
+        given callback and save its results, if any.  This result will be
+        returned.
+
+        Of course, it isn't worthwhile to call the interlude if itself hogs
+        the execution time of master.
         """
         pypar.broadcast(ins, root=self.master_rank, bypass=True)
+        if callable(interlude_callback):
+            ires = interlude_callback(*i_args, **i_kwargs)
+        else:
+            ires = None
         work_done = 0
         while work_done < self.nslaves:
             n, stat = pypar.receive(source=pypar.any_source, tag=self.tag_data,
@@ -126,21 +140,24 @@ class MasterSlavePair(object):
             sl, sh = self.slice_table[thisslave]
             self.res_buf[sl:sh] = self.masterrecvbuf[:sh - sl]
             work_done += 1
+        return ires
 
-    def eval(self, ins):
+    def eval(self, ins, interlude_callback=None, *i_args, **i_kwargs):
         """Evaluate the result of applying the function work_callback,
         as given during initialization, for the instruction ins.
 
         Essentially, it can be thought of as a parallel version of calling
         work_callback(ins, data).
 
-        Returns numpy array that has the same value as obtained by the
-        non-parallel call, when called in master.  Otherwise, return None.
+        Returns a tuple (mainres, interlude_res), where the first element
+        is numpy array that has the same value as obtained by the
+        non-parallel call, when called in master.  The 2nd element is the
+        return value of the interlude call.
         """
         ins = numpy.ascontiguousarray(ins)
         if self.ismaster:
-            self.master(ins)
-            return self.res_buf
+            ires = self.master(ins, interlude_callback, *i_args, **i_kwargs)
+            return (self.res_buf, ires)
         else:
             return None
 
