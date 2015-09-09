@@ -69,7 +69,7 @@ def print_result(array):
 # Example of using the parallel evaluator.  Now, the name `res` will have value
 # as evaluated by the slaves in the master process, but the slave processes
 # are trapped in the evaluation loop and can't even reach here.
-res = pair.eval(numpy.array([0.1, 0.0, -0.1]))
+res = pair.eval(numpy.array([0.1, 0.0, -0.1]))[0]
 
 # Try to use the result.  Note that we pass it to a function confined to
 # master, so that even after the slaves break out of the evaluation loop
@@ -77,16 +77,16 @@ res = pair.eval(numpy.array([0.1, 0.0, -0.1]))
 print_result(res)		# Should print the correct result.
 
 # pair.eval() can be called again
-print_result(pair.eval(numpy.array([-1.0, 0.0, 0.2])))
+print_result(pair.eval(numpy.array([-1.0, 0.0, 0.2]))[0])
 
 # Example of cleaning up after we're done using the pair.
 # Note that the slave program, before we call terminate(), has been trapped
 # in the evaluation loop.  After we call this, it will break out of the loop
 # and execute whatever code from the place we noted by a comment "MARK".
 # However, actually it won't do much, because eval() does nothing but
-# returning None to the slave, and this is also the case of terminate().
-# In addition, we have already made print_result() confined to master, so
-# actually the slave will produce no side-effect.
+# returning (None, None) to the slave, and this is also the case of
+# terminate().  In addition, we have already made print_result() confined to
+# master, so actually the slave will produce no side-effect.
 pair.terminate()
 
 # After MPI finalization, it is no longer possible to call any MPI function.

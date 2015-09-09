@@ -159,7 +159,7 @@ class MasterSlavePair(object):
             ires = self.master(ins, interlude_callback, *i_args, **i_kwargs)
             return (self.res_buf, ires)
         else:
-            return None
+            return (None, None)
 
     def slave(self):
         """Slave program.
