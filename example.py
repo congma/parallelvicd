@@ -43,10 +43,10 @@ print_result(pair.eval(numpy.array([-1.0, 0.0, 0.2])))
 # Note that the slave program, before we call terminate(), has been trapped
 # in the evaluation loop.  After we call this, it will break out of the loop
 # and execute whatever code from the place we noted by a comment "MARK".
-# However, actually it won't do much, because eval() does nothing but return
-# None to the slave, and so does terminate().  Also, we have already made
-# print_result() confined to master, so actually the slave will produce no
-# side-effect.
+# However, actually it won't do much, because eval() does nothing but
+# returning None to the slave, and this is also the case of terminate().
+# In addition, we have already made print_result() confined to master, so
+# actually the slave will produce no side-effect.
 pair.terminate()
 
 # After MPI finalization, it is no longer possible to call any MPI function.
