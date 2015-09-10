@@ -132,9 +132,10 @@ class MasterSlavePair(object):
             ires = None
         work_done = 0
         while work_done < self.nslaves:
-            n, stat = pypar.receive(source=pypar.any_source, tag=self.tag_data,
-                                    buffer=self.masterrecvbuf, bypass=True,
-                                    return_status=True)
+            __, stat = pypar.receive(source=pypar.any_source,
+                                     tag=self.tag_data,
+                                     buffer=self.masterrecvbuf, bypass=True,
+                                     return_status=True)
             thisslave = (stat.source -
                          (1 if stat.source > self.master_rank else 0))
             sl, sh = self.slice_table[thisslave]
