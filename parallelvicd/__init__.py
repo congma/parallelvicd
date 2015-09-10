@@ -9,3 +9,4 @@ The package also provides a utility module util with some useful functions.
 """
 import pypar
 from .drive import MasterSlavePair
+finalize = pypar.finalize

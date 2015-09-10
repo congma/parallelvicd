@@ -74,7 +74,7 @@ res = pair.eval(numpy.array([0.1, 0.0, -0.1]))[0]
 # Try to use the result.  Note that we pass it to a function confined to
 # master, so that even after the slaves break out of the evaluation loop
 # eventially (and hence get None as value of `res`), we don't get extra output.
-print_result(res)		# Should print the correct result.
+print_result(res)			# Should print the correct result.
 
 # pair.eval() can be called again
 print_result(pair.eval(numpy.array([-1.0, 0.0, 0.2]))[0])
@@ -90,7 +90,7 @@ print_result(pair.eval(numpy.array([-1.0, 0.0, 0.2]))[0])
 pair.terminate()
 
 # After MPI finalization, it is no longer possible to call any MPI function.
-parallelvicd.pypar.finalize()	# Calls underlying MPI_Finalize().
+parallelvicd.finalize()			# Calls underlying MPI_Finalize().
 ```
 
 To run the example, save it as `example.py` and use the `mpiexec` command to
