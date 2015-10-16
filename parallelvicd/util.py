@@ -49,9 +49,9 @@ def scanl(iterable, f=operator.add, starting=0):
     """Generator similar to Haskell's scanl."""
     it = iter(iterable)
     value = starting
-    yield total
+    yield value
     for x in it:
-        value = f(total, x)
+        value = f(value, x)
         yield value
 
 
