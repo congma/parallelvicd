@@ -34,11 +34,13 @@ def balance_gatherv(ntask, nworker):
     return (counts, offsets)
 
 
-def balance_gatherv_skipmaster(ntask, nworker, masterrank=0):
+def balance_gatherv_skipmaster(ntask, nslave, masterrank=0):
     """Similar to balance_gatherv(), but make sure that the master contributes
-    only a zero-sized section.
+    only a zero-sized section.  The 2nd argument is interpreted as the
+    number of *slaves*, which is usually (nprocess - 1).  By using "slaves",
+    it is implied that the master doesn't do slave work.
     """
-    rawcounts, rawoffsets = balance_gatherv(ntask, nworker)
+    rawcounts, rawoffsets = balance_gatherv(ntask, nslave)
     counts = rawcounts[:masterrank] + [0] + rawcounts[masterrank:]
     offsets = (rawoffsets[:masterrank] + [rawoffsets[masterrank]] +
                rawoffsets[masterrank:])
