@@ -34,16 +34,16 @@ def balance_gatherv(ntask, nworker):
     return (counts, offsets)
 
 
-def balance_gatherv_skipmaster(ntask, nslave, masterrank=0):
-    """Similar to balance_gatherv(), but make sure that the master contributes
+def balance_gatherv_skipmanager(ntask, nworker, managerrank=0):
+    """Similar to balance_gatherv(), but make sure that the manager contributes
     only a zero-sized section.  The 2nd argument is interpreted as the
-    number of *slaves*, which is usually (nprocess - 1).  By using "slaves",
-    it is implied that the master doesn't do slave work.
+    number of *workers*, which is usually (nprocess - 1).  By using "workers",
+    it is implied that the manager doesn't do worker work.
     """
-    rawcounts, rawoffsets = balance_gatherv(ntask, nslave)
-    counts = rawcounts[:masterrank] + [0] + rawcounts[masterrank:]
-    offsets = (rawoffsets[:masterrank] + [rawoffsets[masterrank]] +
-               rawoffsets[masterrank:])
+    rawcounts, rawoffsets = balance_gatherv(ntask, nworker)
+    counts = rawcounts[:managerrank] + [0] + rawcounts[managerrank:]
+    offsets = (rawoffsets[:managerrank] + [rawoffsets[managerrank]] +
+               rawoffsets[managerrank:])
     return (counts, offsets)
 
 
@@ -57,4 +57,5 @@ def scanl(iterable, f=operator.add, starting=0):
         yield value
 
 
-__all__ = ["balance", "balance_gatherv", "balance_gatherv_skipmaster", "scanl"]
+__all__ = ["balance", "balance_gatherv", "balance_gatherv_skipmanager",
+           "scanl"]
