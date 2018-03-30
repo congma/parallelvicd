@@ -95,10 +95,10 @@ parallelvicd.finalize()			# Calls underlying MPI_Finalize().
 ```
 
 To run the example, save it as `example.py` and use the `mpiexec` command to
-start it (at least one slave is required):
+start it (at least one worker is required):
 
 ```console
-$ mpiexec -n 4 python example.py
+$ mpiexec -n 2 python example.py
 [  0.1   1.1   2.1   3.1   4.1   5.1   6.1   7.1   8.1   9.1  10.1  11.1]
 [  0.2   1.2   2.2   3.2   4.2   5.2   6.2   7.2   8.2   9.2  10.2  11.2]
 ```
